@@ -1,1 +1,3 @@
-./data/data_lib/
+data/data_lib
+*.npy
+*.DS_Store
