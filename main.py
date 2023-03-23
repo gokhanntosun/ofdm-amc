@@ -1,7 +1,7 @@
 import sys
 import torch
-from model.ofdm_amc_net import OFDM_AMC_Model
-from data.dataset.ofdm_amc_dataset import OFDM_AMC_Dataset, getDataLoaders
+from model.AMCModel import OFDM_AMC_Model
+from data.dataset.OFDMDataset import OFDM_AMC_Dataset, getDataLoaders
 from torch.optim import Adam
 import torch.nn as nn
 

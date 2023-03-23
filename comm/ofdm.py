@@ -3,7 +3,7 @@ import numpy.fft as F
 
 class OFDM:
 
-    def __init__(self, n_carriers: int, cp_length: int) -> None:
+    def __init__(self, n_carriers: int, cp_length: int=0) -> None:
         pass        
         self.CP_LEN = cp_length
         self.N_CARRIERS = n_carriers
@@ -35,10 +35,18 @@ class OFDM:
         return np.row_stack((r, i))
 
     def __modOFDM(self, symbols: np.ndarray) -> np.ndarray:
-        return np.sqrt(self.N_CARRIERS) * F.ifft(symbols, n=self.N_CARRIERS)
+        chunks = np.reshape(symbols, (1, self.N_CARRIERS, len(symbols) // self.N_CARRIERS))
+        tmp = np.zeros_like(chunks)
+        for i in range(chunks.shape[-1]):
+            tmp[:, :, i] = F.ifft(chunks[:, :, i], n=self.N_CARRIERS) * np.sqrt(self.N_CARRIERS)
+        return np.reshape(tmp, (1, len(symbols)))
 
     def __demodOFDM(self, symbols: np.ndarray) -> np.ndarray:
-        return F.fft(symbols, n=self.N_CARRIERS) / np.sqrt(self.N_CARRIERS)
+        chunks = np.reshape(symbols, (1, self.N_CARRIERS, len(symbols) // self.N_CARRIERS))
+        tmp = np.zeros_like(chunks)
+        for i in range(chunks.shape[-1]):
+            tmp[:, :, i] = F.fft(chunks[:, :, i], n=self.N_CARRIERS) / np.sqrt(self.N_CARRIERS)
+        return np.reshape(tmp, (1, len(symbols)))
 
     def __addCyclicPrefix(self, frame: np.ndarray) -> np.ndarray:
         return np.concatenate((frame[-self.CP_LEN:], frame))
