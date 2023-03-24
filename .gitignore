@@ -1,4 +1,4 @@
-data/data_lib
+.ipynb_checkpoints
 *.npy
 *.DS_Store
-*.ipynb
+data/data_lib
