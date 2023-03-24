@@ -25,6 +25,6 @@ class FilterBank:
             output = np.empty_like(chunks)
 
             for i in range(chunks.shape[-1]):
-                output[:, :, i] = self.__modem.Demodulate(chunks[:, :, i])
+                output[:, :, i] = self.__modem.demodulate(chunks[:, :, i])
 
             return np.reshape(output, (2, output.size // 2))

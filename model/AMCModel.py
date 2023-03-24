@@ -2,12 +2,12 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as f
 
-from FilterBank import FilterBank
+from .FilterBank import FilterBank
         
 class AMCModel(nn.Module):
     def __init__(self, filter_size_list: list=[256, 512, 1024]) -> None:
         super().__init__()
-        self.__size_list = filter_size_list
+        # self.__size_list = filter_size_list
         # for debugging, construct each net seperately
         # self.__cnns = [SubNetwork(fft_size=size) for size in self.__size_list]
 

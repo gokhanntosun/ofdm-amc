@@ -6,7 +6,7 @@ from torch.utils.data import Dataset, DataLoader, random_split
 class OFDMDataset(Dataset):
     def __init__(self) -> None:
         super().__init__()
-        self.xs, self.ys = self.__readData()
+        self.xs, self.ys = self.__read_data()
 
     def __len__(self) -> int:
         return self.xs.shape[-1]
@@ -14,7 +14,7 @@ class OFDMDataset(Dataset):
     def __getitem__(self, index):
         return (self.xs[:, :, index], self.ys[index])
 
-    def __readData(self):
+    def __read_data(self):
         # If change BASE to one upper directory, it will mix all data points. Currently it seperates by SNR values
         BASE = '/Users/gtosun/Documents/vsc_workspace/ofdm-amc/data/data_lib'
 
@@ -49,7 +49,7 @@ class OFDMDataset(Dataset):
         assert cnt == 0
         return (xs, ys)
 
-def getDataLoaders(dataset: OFDMDataset, batch_size: int, shuffle: bool):
+def get_dataloaders(dataset: OFDMDataset, batch_size: int, shuffle: bool):
     train_size = int(len(dataset) * 0.85)
     test_size = len(dataset) - train_size
     train_set, test_set = random_split(dataset=dataset, lengths=[train_size ,test_size], generator=torch.Generator().manual_seed(0))

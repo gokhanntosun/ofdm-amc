@@ -16,5 +16,5 @@ from .data_generation.MPWrapperParams import (
 
 from .dataset.OFDMDataset import (
     OFDMDataset,
-    getDataLoaders,
+    get_dataloaders,
 )

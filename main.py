@@ -1,7 +1,7 @@
 import sys
 import torch
-from model.AMCModel import OFDM_AMC_Model
-from data.dataset.OFDMDataset import OFDM_AMC_Dataset, getDataLoaders
+from model.AMCModel import AMCModel
+from data.dataset.OFDMDataset import OFDMDataset, get_dataloaders
 from torch.optim import Adam
 import torch.nn as nn
 
@@ -12,10 +12,10 @@ def main():
     SHUFFLE = True
     EPOCHS = 5
 
-    dataset = OFDM_AMC_Dataset()
-    trainloader, testloader = getDataLoaders(dataset=dataset, batch_size=BATCH_SIZE, shuffle=SHUFFLE)
+    dataset = OFDMDataset()
+    trainloader, testloader = get_dataloaders(dataset=dataset, batch_size=BATCH_SIZE, shuffle=SHUFFLE)
 
-    model = OFDM_AMC_Model().double()
+    model = AMCModel().double()
     criterion = nn.BCELoss()
     optimizer = Adam(params=model.parameters(), lr=LR)
 

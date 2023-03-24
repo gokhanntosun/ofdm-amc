@@ -10,20 +10,20 @@ class ModulationType(Enum):
 
 class Modem():
     def __init__(self, n: int, type: ModulationType):
-        self.setN(n=n)
-        self.setType(type=type)
-        self.symbols = self.__updateSymbols()
+        self.set_n(n=n)
+        self.set_type(type=type)
+        self.symbols = self.__update_symbols()
 
-    def setN(self, n: int) -> None:
+    def set_n(self, n: int) -> None:
         assert isinstance(n, int), "n must be an int."
         self.n = n
 
-    def setType(self, type: ModulationType) -> None:
+    def set_type(self, type: ModulationType) -> None:
         assert isinstance(type, ModulationType), "type must be a ModulationType."
         self.type = type
-        self.symbols = self.__updateSymbols()
+        self.symbols = self.__update_symbols()
 
-    def modulateBitstream(self, bits: np.ndarray):
+    def modulate_bitstream(self, bits: np.ndarray):
         l = len(bits)
 
         nrows = int(l / self.n)
@@ -32,28 +32,28 @@ class Modem():
         bits = [''.join(seq.astype(str)) for seq in bits]
 
         if self.type == ModulationType.PSK:
-            return self.__modPSK(bits=bits)
+            return self.__mod_psk(bits=bits)
         
         elif self.type == ModulationType.QAM:
-            return self.__modQAM(bits=bits)
+            return self.__mod_qam(bits=bits)
             
         else:
             pass
             # raise Exception()
 
-    def demodulateSymbolStream(self, symbols: np.array):
+    def demodulate_symbol_stream(self, symbols: np.array):
         # TODO: You can merge different __demod methods, they practically do the same thing
         symbols = symbols[0, :] + 1j * symbols[1, :]
         if self.type == ModulationType.PSK:
-            return self.__demodPSK(symbols=symbols)
+            return self.__demod_psk(symbols=symbols)
 
         elif self.type == ModulationType.QAM:
-            return self.__demodQAM(symbols=symbols)
+            return self.__demod_qam(symbols=symbols)
 
         else:
             pass
 
-    def __modPSK(self, bits: np.array) -> np.ndarray:
+    def __mod_psk(self, bits: np.array) -> np.ndarray:
 
         k = self.n      # Bits per symbol
         M = 2 ** k      # Number of symbols
@@ -66,7 +66,7 @@ class Modem():
 
         return np.row_stack((I, Q))
 
-    def __demodPSK(self, symbols: np.array):
+    def __demod_psk(self, symbols: np.array):
         symbol_to_seq_map = {self.symbols[i]: format(i, 'b').rjust(self.n, '0') for i in range(2 ** self.n)}
         decoded_bits = [""] * len(symbols)  
 
@@ -77,7 +77,7 @@ class Modem():
         decoded_bits = np.array([int(bit) for bit in ''.join(decoded_bits)])
         return decoded_bits
 
-    def __modQAM(self, bits: np.ndarray):
+    def __mod_qam(self, bits: np.ndarray):
         k = self.n
         M = 2 ** k
 
@@ -89,7 +89,7 @@ class Modem():
 
         return np.row_stack((I, Q))
 
-    def __demodQAM(self, symbols: np.array):
+    def __demod_qam(self, symbols: np.array):
         symbol_to_seq_map = {self.symbols[i]: format(i, 'b').rjust(self.n, '0') for i in range(2 ** self.n)}
         decoded_bits = [""] * len(symbols)
 
@@ -99,7 +99,7 @@ class Modem():
         decoded_bits = np.array([int(bit) for bit in ''.join(decoded_bits)])
         return decoded_bits
 
-    def __updateSymbols(self) -> np.ndarray:
+    def __update_symbols(self) -> np.ndarray:
         if self.type == ModulationType.PSK:
             # shift = 1.0 if self.n == 1 else np.exp(1j * np.pi / 4)
             return np.exp(1j * 2 * np.pi * np.arange(2 ** self.n) / 2 ** self.n)
@@ -112,11 +112,11 @@ class Modem():
         else:
             pass
 
-    def __updateMaps(self):
+    def __update_maps(self):
         #TODO: Update symbol maps when modulation scheme or bits per symbol changes
         pass
 
-    def __grayCode(self, n: int) -> List[str]: 
+    def __gray_code(self, n: int) -> List[str]: 
         b = [0, 1] 
         for _ in range(n-1): 
             u = b + list(reversed(b)) 

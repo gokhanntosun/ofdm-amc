@@ -57,8 +57,8 @@ class Generator:
     def __comm_cycle(self) -> np.ndarray:
         #! TODO: use awgn channel output when model is ok
         bitstream = np.random.randint(0, 2, (self.__BITSTREAM_LEN))     # bits
-        t_symbols = self.__modem.modulateBitstream(bitstream)           # time symbols
-        f_symbols = self.__ofdm.Modulate(t_symbols)
+        t_symbols = self.__modem.modulate_bitstream(bitstream)           # time symbols
+        f_symbols = self.__ofdm.modulate(t_symbols)
         # rx_symbols = self.__channel.apply(f_symbols)  # awgn channel
         return f_symbols
 
