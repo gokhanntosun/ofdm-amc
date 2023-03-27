@@ -21,6 +21,8 @@ class FilterBank:
             self.__modem = OFDM(n_carriers=n, cp_length=0)
 
         def filter(self, x) -> np.ndarray:
+            #! TODO: because of the batches, you get a (2, 2048, 16) tensor. must handle this
+            #* Idea: Instead of using np.fft/np.ifft, you can use torch.stft/torch.istft for OFDM (de)modulation
             chunks = np.reshape(x, (2, self.__size, x.shape[-1] // self.__size))
             output = np.empty_like(chunks)
 
