@@ -7,8 +7,8 @@ import torch.nn as nn
 
 def main():
 
-    LR = 0.001
-    BATCH_SIZE = 16
+    LR = 0.0005
+    BATCH_SIZE = 1
     SHUFFLE = True
     EPOCHS = 5
 

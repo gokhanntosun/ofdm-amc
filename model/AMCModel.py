@@ -15,7 +15,7 @@ class AMCModel(nn.Module):
         self.__cnn512 = AMCModel.SubNetwork(fft_size=512)
         self.__cnn1024 = AMCModel.SubNetwork(fft_size=1024)
 
-        self.__fc1 = nn.Linear(in_features=195, out_features=128)
+        self.__fc1 = nn.Linear(in_features=12288, out_features=128)
         self.__fc2 = nn.Linear(in_features=128, out_features=64)
         self.__fc3 = nn.Linear(in_features=64, out_features=3)
         self.__smax = nn.Softmax(dim=0)
@@ -36,24 +36,25 @@ class AMCModel(nn.Module):
         def __init__(self) -> None:
             super().__init__()
 
-            self.conv1 = nn.Conv2d(1, 256, (2, 3), padding=(1, 1))
+            self.conv1 = nn.Conv2d(1, 256, (2, 1), padding=(1, 0))
             self.conv2 = nn.Conv2d(256, 128, (1, 3), padding=(0, 1))
             self.conv3 = nn.Conv2d(128, 64, (1, 3), padding=(0, 1))
             self.conv4 = nn.Conv2d(64, 32, (1, 5), padding=(0, 2))
             self.conv5 = nn.Conv2d(32, 16, (1, 7), padding=(0, 3))
 
-            self.max_pool = nn.MaxPool2d((1, 2), padding=(0, 1))
-            self.max_pool_3d = nn.MaxPool3d((16, 2, 1))
-
+            self.max_pool= nn.MaxPool2d((2, 1), padding=(1, 0))
             self.relu = nn.ReLU()
             
 
         def forward(self, x):
+            x = torch.unsqueeze(x, 0)
             x = self.max_pool( self.relu( self.conv1(x) ) )
             x = self.max_pool( self.relu( self.conv2(x) ) )
             x = self.max_pool( self.relu( self.conv3(x) ) )
             x = self.max_pool( self.relu( self.conv4(x) ) )
-            return x
+            x, _ = torch.max(x, dim=0)
+            x = self.relu(x)
+            return torch.flatten(x)
 
     class SubNetwork(BaseModel, nn.Module):
         def __init__(self, fft_size: int) -> None:
@@ -62,4 +63,4 @@ class AMCModel(nn.Module):
 
         def forward(self, x):
             x = self.__filter.filter(x)
-            return super().forward(x)
+            return super().forward(torch.from_numpy(x))
