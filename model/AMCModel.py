@@ -34,16 +34,16 @@ class AMCModel(nn.Module):
     class BaseModel(nn.Module):
         def __init__(self) -> None:
             super().__init__()
-            self.conv1 = nn.Conv2d(1, 32, (2, 4), padding=(1, 2))
+            self.conv1 = nn.Conv2d(1, 32, (2, 1), padding=(1, 0))
             self.conv2 = nn.Conv2d(32, 4, (2, 2), padding=(1, 1))
-            self.avg_pool= nn.AvgPool2d((2, 2), padding=(1, 1))
+            self.max_pool= nn.MaxPool2d((2, 2), padding=(1, 1))
             self.relu = nn.LeakyReLU(negative_slope=0.05)
             
 
         def forward(self, x):
             x = torch.unsqueeze(x, 0)
-            x = self.avg_pool( self.relu( self.conv1(x) ) )
-            x = self.avg_pool( self.relu( self.conv2(x) ) )
+            x = self.max_pool( self.relu( self.conv1(x) ) )
+            x = self.max_pool( self.relu( self.conv2(x) ) )
 
             return torch.flatten(x)
 
@@ -53,5 +53,6 @@ class AMCModel(nn.Module):
             self.__filter = FilterBank.FFTFilter(n=fft_size)
 
         def forward(self, x):
+            # consider adding normalization after filtering
             x = self.__filter.filter(x)
             return super().forward(x)
