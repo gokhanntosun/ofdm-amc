@@ -29,4 +29,4 @@ class FilterBank:
             for i in range(chunks.shape[-1]):
                 output[:, :, i] = self.__modem.demodulate(chunks[:, :, i])
 
-            return np.reshape(output, (2, output.size // 2))
+            return torch.from_numpy(np.reshape(output, (2, output.size // 2))).to(torch.float32)
