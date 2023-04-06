@@ -8,7 +8,7 @@ from argparse import ArgumentParser
 from .GeneratorParams import GeneratorParams
 from comm import (
     Modem, ModulationType,
-    # Channel, ChannelType,
+    Channel, ChannelType,
     OFDM,
     )
 
@@ -35,7 +35,7 @@ class Generator:
         self.__MOD_TYPE = ModulationType.PSK if self.__MOD_TYPE_STR == 'psk' else ModulationType.QAM
         self.__modem = Modem(n=self.__BITS_PER_SYMBOL, type=self.__MOD_TYPE)
         self.__ofdm = OFDM(n_carriers=self.__FFT_SIZE, cp_length=0)
-        # self.__channel = Channel(type=ChannelType.AWGN, SNR_db=self.__SNR_dB)
+        self.__channel = Channel(type=ChannelType.AWGN, SNR_db=self.__SNR_dB)
 
     def generate(self) -> None:
         t_start = datetime.datetime.now()
@@ -55,12 +55,11 @@ class Generator:
         self.__postprocess(self.__comm_cycle())
     
     def __comm_cycle(self) -> np.ndarray:
-        #! TODO: use awgn channel output when model is ok
         bitstream = np.random.randint(0, 2, (self.__BITSTREAM_LEN))     # bits
         t_symbols = self.__modem.modulate_bitstream(bitstream)           # time symbols
         f_symbols = self.__ofdm.modulate(t_symbols)
-        # rx_symbols = self.__channel.apply(f_symbols)  # awgn channel
-        return f_symbols
+        rx_symbols = self.__channel.apply(f_symbols)  # awgn channel
+        return rx_symbols
 
     def __postprocess(self, rx_symbols: np.ndarray) -> None:
         split = np.reshape(rx_symbols, (2, Generator.INPUT_LEN, Generator.NUMBER_OF_ITEMS))
