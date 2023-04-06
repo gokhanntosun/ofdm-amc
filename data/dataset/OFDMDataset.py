@@ -16,7 +16,7 @@ class OFDMDataset(Dataset):
 
     def __read_data(self):
         # If change BASE to one upper directory, it will mix all data points. Currently it seperates by SNR values
-        BASE = '/Users/gtosun/Documents/vsc_workspace/ofdm-amc/data/data_lib/20db'
+        BASE = '/Users/gtosun/Documents/vsc_workspace/ofdm-amc/data/data_lib'
 
         NUMBER_OF_ITEMS = 1000
         SYMBOL_PER_ITEM = 2048

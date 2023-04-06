@@ -11,7 +11,7 @@ def generate_data_lib() -> None:
         modulation_list =['psk', 'qam'],
         fft_size_list   =[256, 512, 1024],
         write_dir       ='/Users/gtosun/Documents/vsc_workspace/ofdm-amc/data/data_lib'
-    )
+        )
     MProcWrapper(mp_params).Run()
 
 def main():
