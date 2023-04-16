@@ -32,7 +32,7 @@ class AMCModelBaseline(nn.Module):
             super().__init__()
             self.conv1 = nn.Conv2d(1, 32, (2, 1), padding=(1, 0))
             self.conv2 = nn.Conv2d(32, 4, (2, 2), padding=(1, 1))
-            self.conv3 = nn.Conv2d(4, 1, (1, 171), stride=(1, 171))
+            self.conv3 = nn.Conv2d(4, 1, (2, 171), stride=(1, 171))
             self.max_pool= nn.MaxPool2d((2, 2), padding=(1, 1))
             self.relu = nn.LeakyReLU(negative_slope=0.05)
             
