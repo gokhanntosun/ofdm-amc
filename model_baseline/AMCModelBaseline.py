@@ -25,7 +25,7 @@ class AMCModelBaseline(nn.Module):
         w = torch.unsqueeze(w, 0)
         w = self.__max_pool(w)
 
-        return w    # loss function already includes softmax
+        return torch.squeeze(w)    # loss function already includes softmax
     
     class BaseModel(nn.Module):
         def __init__(self) -> None:
