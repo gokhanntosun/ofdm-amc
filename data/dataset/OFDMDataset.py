@@ -4,8 +4,10 @@ import torch
 from torch.utils.data import Dataset, DataLoader, random_split
 
 class OFDMDataset(Dataset):
-    def __init__(self) -> None:
+    def __init__(self, snr_db: int=None, is_training: bool=True) -> None:
         super().__init__()
+        self.is_training = is_training
+        self.snr_db = self.__snr_db(snr_db)
         self.xs, self.ys = self.__read_data()
 
     def __len__(self) -> int:
@@ -13,10 +15,20 @@ class OFDMDataset(Dataset):
 
     def __getitem__(self, index):
         return (self.xs[:, :, index], self.ys[index, :])
+    
+    def __snr_db(self, snr_db: int) -> str:
+        assert snr_db in list(range(-4, 28, 4)) or snr_db == NotImplemented, 'Invalid SNR value!'
+        if not snr_db:
+            return None
+        if snr_db < 0: return f'_{-1 * snr_db}db'
+        else: return f'{snr_db}db'
 
     def __read_data(self):
         # If change BASE to one upper directory, it will mix all data points. Currently it seperates by SNR values
-        BASE = '/Users/gtosun/Documents/vsc_workspace/ofdm-amc/data/data_lib'
+        t = 'train' if self.is_training else 'test'
+        BASE = f'/Users/gtosun/Documents/vsc_workspace/ofdm-amc/data/data_lib/{t}'
+        if self.snr_db != None:
+            BASE = os.path.join(BASE, self.snr_db)
 
         NUMBER_OF_ITEMS = 1000
         SYMBOL_PER_ITEM = 2048
@@ -45,6 +57,10 @@ class OFDMDataset(Dataset):
             assert cnt >= 0
         assert cnt == 0
         return (xs, ys)
+    
+def get_dataloader(dataset: OFDMDataset, batch_size: int, shuffle: bool):
+    return DataLoader(dataset=dataset, batch_size=batch_size, shuffle=shuffle)
+
 
 def get_dataloaders(dataset: OFDMDataset, batch_size: int, shuffle: bool):
     train_size = int(len(dataset) * 0.85)
