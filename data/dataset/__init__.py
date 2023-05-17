@@ -1,4 +1,5 @@
 from .OFDMDataset import (
     OFDMDataset,
-    get_dataloaders
+    get_dataloader,
+    get_dataloaders,
 )
