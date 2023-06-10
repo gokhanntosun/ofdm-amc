@@ -24,6 +24,9 @@ def generate_data_lib(is_training: bool=True) -> None:
         )
     MProcWrapper(mp_params).Run()
 
+def test_models() -> None:
+    pass
+
 def train_main_model() -> None:
     pass
 
