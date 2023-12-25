@@ -39,11 +39,11 @@ class AMCModelBaseline(nn.Module):
 
         def forward(self, x):
             x = torch.unsqueeze(x, 0)
-            x = self.max_pool( self.relu( self.conv1(x) ) )
-            x = self.max_pool( self.relu( self.conv2(x) ) )
-            x = self.conv3(x)   # -> [1, 1, 3]
+            x = self.max_pool( self.relu( self.conv1(x) ) ) #[32, 3, 2048] -> max_pool -> [32, 2, 1025]
+            x = self.max_pool( self.relu( self.conv2(x) ) ) #[4, 3, 1026] -> max_pool -> [4, 2, 514]
+            x = self.conv3(x)                               #[1, 1, 3]
 
-            return torch.flatten(x) # -> [1, 3]
+            return torch.flatten(x)                         #[1, 3]
 
     class SubNetwork(BaseModel, nn.Module):
         def __init__(self, fft_size: int) -> None:
