@@ -100,7 +100,7 @@ class Test:
     def __get_model(self, path: str) -> Union[AMCModel, AMCModelBaseline]:
         assert os.path.exists(path), f'Invalid path: {path}!'
 
-        state_dict = torch.load(path)()
+        state_dict = torch.load(path)
         model_type = list(state_dict.keys())[0].split("_")[1]
         assert model_type in [str(t) for t in ModelTypes], "Invalid model type!"
 

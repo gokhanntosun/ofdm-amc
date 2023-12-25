@@ -1,10 +1,11 @@
 import os
 import numpy as np
 import torch
+from typing import Union
 from torch.utils.data import Dataset, DataLoader, random_split
 
 class OFDMDataset(Dataset):
-    def __init__(self, snr_db: int=None, is_training: bool=True) -> None:
+    def __init__(self, snr_db: Union[None, int]=None, is_training: bool=True) -> None:
         super().__init__()
         self.is_training = is_training
         self.snr_db = self.__snr_db(snr_db)
@@ -16,10 +17,11 @@ class OFDMDataset(Dataset):
     def __getitem__(self, index):
         return (self.xs[:, :, index], self.ys[index, :])
     
-    def __snr_db(self, snr_db: int) -> str:
-        assert snr_db in list(range(-4, 28, 4)) or snr_db == NotImplemented, 'Invalid SNR value!'
-        if not snr_db:
-            return None
+    def __snr_db(self, snr_db: Union[None, int]) -> str:
+        assert (snr_db==None) or (snr_db in list(range(-4, 28, 4))), 'Invalid SNR value!'
+        if snr_db == None:
+            return NotImplemented
+
         if snr_db < 0: return f'_{-1 * snr_db}db'
         else: return f'{snr_db}db'
 
@@ -27,7 +29,7 @@ class OFDMDataset(Dataset):
         # If change BASE to one upper directory, it will mix all data points. Currently it seperates by SNR values
         t = 'train' if self.is_training else 'test'
         BASE = f'/Users/gtosun/Documents/vsc_workspace/ofdm-amc/data/data_lib/{t}'
-        if self.snr_db != None:
+        if self.snr_db != NotImplemented:
             BASE = os.path.join(BASE, self.snr_db)
 
         NUMBER_OF_ITEMS = 1000
