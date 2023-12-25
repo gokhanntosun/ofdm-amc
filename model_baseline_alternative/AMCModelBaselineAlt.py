@@ -10,16 +10,16 @@ class AMCModelBaselineAlt(nn.Module):
         self.f2 = FilterBank.FFTFilter(n=512)
         self.f3 = FilterBank.FFTFilter(n=1024)
 
-        self.conv1 = nn.Conv2d(1, 32, (7, 1), padding=(3, 0))
-        self.conv2 = nn.Conv2d(32, 16, (3, 3), padding=(1, 1))
-        self.conv3 = nn.Conv2d(16, 4, (2, 2), padding=(1, 1))
-        self.conv4 = nn.Conv2d(4, 1, (2, 1), padding=(1, 0))
+        self.conv1 = nn.Conv2d(1, 64, (5, 5), padding=(2, 2))
+        self.conv2 = nn.Conv2d(64, 32, (3, 3), padding=(1, 1))
+        self.conv3 = nn.Conv2d(32, 16, (2, 2), padding=(1, 1))
+        self.conv4 = nn.Conv2d(16, 1, (2, 1), padding=(1, 0))
 
         self.fc1 = nn.LazyLinear(out_features=128)
         self.fc2 = nn.Linear(in_features=128, out_features=64)
         self.fc3 = nn.Linear(in_features=64, out_features=3)
 
-        self.mpool1 = nn.MaxPool2d((2, 1), stride=(1, 1), padding=(0, 0))
+        self.mpool1 = nn.MaxPool2d((2, 1), padding=(0, 0))
         self.mpool2 = nn.MaxPool2d((2, 2), padding=(0, 0))
 
         self.relu = nn.LeakyReLU(negative_slope=0.05)
