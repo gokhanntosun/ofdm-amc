@@ -67,7 +67,7 @@ def get_dataloader(dataset: OFDMDataset, batch_size: int, shuffle: bool):
 def get_dataloaders(dataset: OFDMDataset, batch_size: int, shuffle: bool):
     train_size = int(len(dataset) * 0.85)
     test_size = len(dataset) - train_size
-    train_set, test_set = random_split(dataset=dataset, lengths=[train_size ,test_size])
+    train_set, test_set = random_split(dataset=dataset, lengths=[train_size ,test_size], generator=torch.Generator().manual_seed(7))
 
     trainloader = DataLoader(dataset=train_set, batch_size=batch_size, shuffle=shuffle)
     testloader = DataLoader(dataset=test_set, batch_size=batch_size, shuffle=shuffle)
